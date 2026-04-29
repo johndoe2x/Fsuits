@@ -55,19 +55,21 @@ a:hover {
 /* Sidebar */
 aside {
   width: 16rem;
-  background: white;
-  border-right: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-right: 2px solid #cbd5e1;
   height: 100vh;
   position: sticky;
   top: 0;
   display: flex;
   flex-direction: column;
   padding: 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 aside > div:first-child {
   padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
+  background: #f8fafc;
 }
 
 aside h1 {
@@ -79,8 +81,9 @@ aside h1 {
 
 aside p {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0;
+  font-weight: 500;
 }
 
 nav {
@@ -98,7 +101,7 @@ nav span {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.625rem 0.75rem;
+  padding: 0.75rem 0.875rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -106,32 +109,35 @@ nav span {
 }
 
 nav a {
-  color: #475569;
+  color: #334155;
 }
 
 nav a:hover {
-  background: #f1f5f9;
+  background: #e0e7ff;
   text-decoration: none;
+  color: #2563eb;
 }
 
 nav a.active {
   background: #eff6ff;
   color: #2563eb;
-  border-left: 2px solid #2563eb;
-  padding-left: calc(0.75rem - 2px);
+  border-left: 3px solid #2563eb;
+  padding-left: calc(0.875rem - 3px);
+  font-weight: 600;
 }
 
 nav span {
-  color: #cbd5e1;
+  color: #a1a5af;
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 aside > div:last-child {
   padding: 1rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 2px solid #e2e8f0;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #64748b;
+  background: #f8fafc;
 }
 
 /* Main Content */
