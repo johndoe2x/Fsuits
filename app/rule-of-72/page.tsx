@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function RuleOf72() {
   const [rate, setRate] = useState<number>(7);
   const [years, setYears] = useState<number>(0);
-  const [investmentAmount, setInvestmentAmount] = useState<number>(10000);
+  const [investmentAmount, setInvestmentAmount] = useState<number>(10000000);
   const [finalAmount, setFinalAmount] = useState<number>(0);
 
   useEffect(() => {
