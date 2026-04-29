@@ -21,26 +21,18 @@ export default function Sidebar() {
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {menuItems.map((item) => (
-          <div key={item.href}>
-            {item.disabled ? (
-              <span className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 text-sm cursor-not-allowed opacity-50">
-                <span className="text-lg">{item.icon}</span>
-                <span>{item.label}</span>
-              </span>
-            ) : (
-              <Link
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  pathname === item.href
-                    ? "bg-blue-50 text-blue-600 border-l-2 border-blue-600"
-                    : "text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            )}
-          </div>
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              pathname === item.href
+                ? "bg-blue-50 text-blue-600 border-l-2 border-blue-600"
+                : "text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            <span className="text-lg">{item.icon}</span>
+            <span>{item.label}</span>
+          </Link>
         ))}
       </nav>
 
