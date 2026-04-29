@@ -70,7 +70,7 @@ export default function RuleOf72() {
                   Initial Investment
                 </label>
                 <div className="flex items-center gap-3">
-                  <span style={{ color: "#94a3b8" }}>$</span>
+                  <span style={{ color: "#94a3b8" }}>₹</span>
                   <input
                     type="number"
                     value={investmentAmount}
@@ -94,7 +94,7 @@ export default function RuleOf72() {
             <div className="result-card green">
               <p>Final Amount</p>
               <div className="value">
-                ${finalAmount.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                ₹{finalAmount.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
               </div>
               <p>after {years.toFixed(1)} years</p>
             </div>
@@ -120,9 +120,9 @@ export default function RuleOf72() {
             Years to Double = 72 ÷ Annual Return Rate (%)
           </div>
           <p style={{ fontSize: "0.875rem" }}>
-            For example, at a {rate.toFixed(1)}% annual return, an investment of $
-            {investmentAmount.toLocaleString()} would double to $
-            {finalAmount.toLocaleString("en-US", { maximumFractionDigits: 0 })} in
+            For example, at a {rate.toFixed(1)}% annual return, an investment of ₹
+            {investmentAmount.toLocaleString("en-IN")} would double to ₹
+            {finalAmount.toLocaleString("en-IN", { maximumFractionDigits: 0 })} in
             approximately <strong>{years.toFixed(1)} years</strong>.
           </p>
         </div>
