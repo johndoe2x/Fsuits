@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const menuItems = [
   { href: "/", label: "Dashboard", icon: "📊" },
   { href: "/rule-of-72", label: "Rule of 72", icon: "📈" },
-  { href: "/compound-interest", label: "Compound Interest", icon: "💰", disabled: true },
+  { href: "/compound-interest", label: "Compound Interest", icon: "💰" },
 ];
 
 export default function Sidebar() {

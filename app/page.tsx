@@ -28,20 +28,21 @@ export default function Home() {
             </div>
           </Link>
 
-          <div className="card" style={{ opacity: 0.5, cursor: "not-allowed" }}>
+          <Link href="/Fsuits/compound-interest" className="card" style={{ display: "block", position: "relative" }}>
             <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
               <div>
-                <h2 style={{ marginBottom: "0.5rem", color: "#cbd5e1" }}>Compound Interest</h2>
-                <p style={{ fontSize: "0.875rem", color: "#a1a5af" }}>
-                  Calculate compound interest on your investments over time.
+                <h2 style={{ marginBottom: "0.5rem" }}>Compound Interest</h2>
+                <p style={{ fontSize: "0.875rem" }}>
+                  Calculate how your investment grows with compound interest.
                 </p>
               </div>
               <span style={{ fontSize: "1.875rem" }}>💰</span>
             </div>
-            <div className="flex items-center gap-3" style={{ color: "#cbd5e1", fontWeight: "500", fontSize: "0.875rem" }}>
-              <span>Coming Soon</span>
+            <div className="flex items-center gap-3" style={{ color: "#2563eb", fontWeight: "500", fontSize: "0.875rem" }}>
+              <span>Open Calculator</span>
+              <span>→</span>
             </div>
-          </div>
+          </Link>
         </div>
 
         <div className="highlight">
