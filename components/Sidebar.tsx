@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
-  { href: "/", label: "Dashboard", icon: "📊" },
-  { href: "/rule-of-72", label: "Rule of 72", icon: "📈" },
-  { href: "/compound-interest", label: "Compound Interest", icon: "💰" },
+  { href: "/Fsuits/", label: "Dashboard", icon: "📊" },
+  { href: "/Fsuits/rule-of-72", label: "Rule of 72", icon: "📈" },
+  { href: "/Fsuits/compound-interest", label: "Compound Interest", icon: "💰" },
 ];
 
 export default function Sidebar() {
