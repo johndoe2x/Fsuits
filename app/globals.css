@@ -109,7 +109,7 @@ nav span {
 }
 
 nav a {
-  color: #334155;
+  color: #1e293b;
 }
 
 nav a:hover {
@@ -127,9 +127,9 @@ nav a.active {
 }
 
 nav span {
-  color: #a1a5af;
+  color: #cbd5e1;
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 aside > div:last-child {
