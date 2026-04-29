@@ -13,9 +13,9 @@ interface MonthData {
 }
 
 export default function SIPCalculator() {
-  const [monthlyInvestment, setMonthlyInvestment] = useState<number>(50000);
-  const [annualRate, setAnnualRate] = useState<number>(12);
-  const [duration, setDuration] = useState<number>(10);
+  const [monthlyInvestment, setMonthlyInvestment] = useState<number>(15000);
+  const [annualRate, setAnnualRate] = useState<number>(15);
+  const [duration, setDuration] = useState<number>(15);
   const [frequency, setFrequency] = useState<string>("monthly");
   const [stepUpPercentage, setStepUpPercentage] = useState<number>(0);
   const [includeStepUp, setIncludeStepUp] = useState<boolean>(false);
@@ -406,6 +406,12 @@ export default function SIPCalculator() {
                     <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
                       <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "600", color: "#0f172a" }}>Period</th>
                       <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Investment</th>
+                      {includeStepUp && (
+                        <>
+                          <th style={{ padding: "0.75rem", textAlign: "center", fontWeight: "600", color: "#16a34a" }}>Step-up %</th>
+                          <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Step-up Value</th>
+                        </>
+                      )}
                       <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Invested</th>
                       <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Value</th>
                       <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Gains</th>
@@ -425,12 +431,17 @@ export default function SIPCalculator() {
                         </td>
                         <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b", fontWeight: "600" }}>
                           ₹{item.investment.toLocaleString("en-IN")}
-                          {includeStepUp && stepUpPercentage > 0 && currentYearKey > 1 && idx === 0 && (
-                            <div style={{ fontSize: "0.75rem", color: "#10b981", fontWeight: "700", marginTop: "0.25rem" }}>
-                              ↑ {((item.investment / monthlyInvestment - 1) * 100).toFixed(1)}% increase
-                            </div>
-                          )}
                         </td>
+                        {includeStepUp && (
+                          <>
+                            <td style={{ padding: "0.75rem", textAlign: "center", color: currentYearKey > 1 ? "#10b981" : "#94a3b8", fontWeight: "600" }}>
+                              {currentYearKey > 1 ? `+${((item.investment / monthlyInvestment - 1) * 100).toFixed(1)}%` : "-"}
+                            </td>
+                            <td style={{ padding: "0.75rem", textAlign: "right", color: currentYearKey > 1 ? "#10b981" : "#94a3b8", fontWeight: "600" }}>
+                              {currentYearKey > 1 ? `₹${(item.investment - monthlyInvestment).toLocaleString("en-IN")}` : "-"}
+                            </td>
+                          </>
+                        )}
                         <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
                           ₹{item.totalInvested.toLocaleString("en-IN")}
                         </td>
@@ -446,6 +457,64 @@ export default function SIPCalculator() {
                 </table>
               </div>
             )}
+          </div>
+        </div>
+
+        <div style={{ marginTop: "3rem" }}>
+          <h2 style={{ marginBottom: "1.5rem" }}>Year-wise Summary</h2>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+              <thead>
+                <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
+                  <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "600", color: "#0f172a" }}>Year</th>
+                  <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Year Investment</th>
+                  <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Year Gains</th>
+                  <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Cumulative Invested</th>
+                  <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Cumulative Value</th>
+                  <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Cumulative Gains</th>
+                </tr>
+              </thead>
+              <tbody>
+                {yearKeys.map((year, idx) => {
+                  const yearData = yearlyData[year];
+                  if (!yearData || yearData.length === 0) return null;
+
+                  const lastMonthOfYear = yearData[yearData.length - 1];
+                  const firstMonthOfYear = yearData[0];
+                  const prevYearLastData = year > 1 && yearlyData[year - 1] ? yearlyData[year - 1][yearlyData[year - 1].length - 1] : null;
+
+                  const yearInvestment = lastMonthOfYear.totalInvested - (prevYearLastData?.totalInvested || 0);
+                  const yearGains = lastMonthOfYear.gains - (prevYearLastData?.gains || 0);
+
+                  return (
+                    <tr
+                      key={year}
+                      style={{
+                        borderBottom: "1px solid #e2e8f0",
+                        background: idx % 2 === 0 ? "#ffffff" : "#f9fafb",
+                      }}
+                    >
+                      <td style={{ padding: "0.75rem", fontWeight: "600", color: "#0f172a" }}>Year {year}</td>
+                      <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b", fontWeight: "600" }}>
+                        ₹{yearInvestment.toLocaleString("en-IN")}
+                      </td>
+                      <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>
+                        ₹{yearGains.toLocaleString("en-IN")}
+                      </td>
+                      <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                        ₹{lastMonthOfYear.totalInvested.toLocaleString("en-IN")}
+                      </td>
+                      <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#2563eb" }}>
+                        ₹{lastMonthOfYear.value.toLocaleString("en-IN")}
+                      </td>
+                      <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>
+                        ₹{lastMonthOfYear.gains.toLocaleString("en-IN")}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
