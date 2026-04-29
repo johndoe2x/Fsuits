@@ -12,7 +12,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-2">
-          <Link href="/Fsuits/rule-of-72" className="card" style={{ display: "block", position: "relative" }}>
+          <Link href="/rule-of-72" className="card" style={{ display: "block", position: "relative" }}>
             <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
               <div>
                 <h2 style={{ marginBottom: "0.5rem" }}>Rule of 72</h2>
@@ -28,7 +28,7 @@ export default function Home() {
             </div>
           </Link>
 
-          <Link href="/Fsuits/compound-interest" className="card" style={{ display: "block", position: "relative" }}>
+          <Link href="/compound-interest" className="card" style={{ display: "block", position: "relative" }}>
             <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
               <div>
                 <h2 style={{ marginBottom: "0.5rem" }}>Compound Interest</h2>
