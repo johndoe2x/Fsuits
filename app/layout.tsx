@@ -27,8 +27,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      suppressHydrationWarning
     >
-      <body className="h-full flex">
+      <body className="h-full flex" suppressHydrationWarning>
         <Sidebar />
         <main className="flex-1 overflow-auto">{children}</main>
       </body>
