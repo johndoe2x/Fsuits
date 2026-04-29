@@ -2,6 +2,16 @@
 
 import { useState, useEffect } from "react";
 
+interface MonthData {
+  month: number;
+  year: number;
+  monthLabel: string;
+  investment: number;
+  totalInvested: number;
+  value: number;
+  gains: number;
+}
+
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useState<number>(50000);
   const [annualRate, setAnnualRate] = useState<number>(12);
@@ -9,11 +19,13 @@ export default function SIPCalculator() {
   const [frequency, setFrequency] = useState<string>("monthly");
   const [stepUpPercentage, setStepUpPercentage] = useState<number>(0);
   const [includeStepUp, setIncludeStepUp] = useState<boolean>(false);
+  const [expandedYear, setExpandedYear] = useState<number | null>(1);
 
   const [totalInvestment, setTotalInvestment] = useState<number>(0);
   const [finalAmount, setFinalAmount] = useState<number>(0);
   const [totalReturns, setTotalReturns] = useState<number>(0);
   const [finalAmountWithoutStepUp, setFinalAmountWithoutStepUp] = useState<number>(0);
+  const [monthlyData, setMonthlyData] = useState<MonthData[]>([]);
 
   const frequencyMap: { [key: string]: number } = {
     monthly: 12,
@@ -37,35 +49,50 @@ export default function SIPCalculator() {
 
       setFinalAmountWithoutStepUp(Math.round(fvWithoutStepUp));
 
+      // Build detailed breakdown
+      const data: MonthData[] = [];
+      let totalInv = 0;
+      let totalVal = 0;
+      const stepUpRate = includeStepUp && stepUpPercentage > 0 ? stepUpPercentage / 100 : 0;
+
+      for (let i = 0; i < periodsTotal; i++) {
+        const year = Math.floor(i / periodPerYear) + 1;
+        const monthInYear = (i % periodPerYear) + 1;
+        const currentInvestment = monthlyInvestment * Math.pow(1 + stepUpRate, year - 1);
+
+        totalInv += currentInvestment;
+        totalVal += currentInvestment * Math.pow(1 + periodRate, periodsTotal - i - 1);
+
+        const monthLabels = frequency === "monthly"
+          ? [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`]
+          : frequency === "quarterly"
+          ? [`Q1`, `Q2`, `Q3`, `Q4`]
+          : [`Annual`];
+
+        data.push({
+          month: monthInYear,
+          year: year,
+          monthLabel: monthLabels[monthInYear - 1],
+          investment: Math.round(currentInvestment),
+          totalInvested: Math.round(totalInv),
+          value: Math.round(totalVal),
+          gains: Math.round(totalVal - totalInv),
+        });
+      }
+
+      setMonthlyData(data);
+
       // Calculate with step-up
       let fvWithStepUp = 0;
       if (includeStepUp && stepUpPercentage > 0) {
-        const stepUpRate = stepUpPercentage / 100;
-        for (let i = 0; i < periodsTotal; i++) {
-          const currentInvestment = monthlyInvestment * Math.pow(1 + stepUpRate, Math.floor(i / periodPerYear));
-          fvWithStepUp += currentInvestment * Math.pow(1 + periodRate, periodsTotal - i - 1);
-        }
-        fvWithStepUp = Math.round(fvWithStepUp);
+        fvWithStepUp = Math.round(totalVal);
       } else {
         fvWithStepUp = Math.round(fvWithoutStepUp);
       }
 
-      // Calculate total investment
-      let totalInv = 0;
-      if (includeStepUp && stepUpPercentage > 0) {
-        const stepUpRate = stepUpPercentage / 100;
-        for (let i = 0; i < periodsTotal; i++) {
-          const currentInvestment = monthlyInvestment * Math.pow(1 + stepUpRate, Math.floor(i / periodPerYear));
-          totalInv += currentInvestment;
-        }
-      } else {
-        totalInv = monthlyInvestment * periodsTotal;
-      }
-      totalInv = Math.round(totalInv);
-
-      setTotalInvestment(totalInv);
+      setTotalInvestment(Math.round(totalInv));
       setFinalAmount(fvWithStepUp);
-      setTotalReturns(fvWithStepUp - totalInv);
+      setTotalReturns(fvWithStepUp - Math.round(totalInv));
     }
   }, [monthlyInvestment, annualRate, duration, frequency, stepUpPercentage, includeStepUp]);
 
@@ -74,6 +101,15 @@ export default function SIPCalculator() {
     quarterly: "Quarterly",
     annual: "Annually",
   };
+
+  // Group data by year
+  const yearlyData = monthlyData.reduce((acc: { [key: number]: MonthData[] }, item) => {
+    if (!acc[item.year]) {
+      acc[item.year] = [];
+    }
+    acc[item.year].push(item);
+    return acc;
+  }, {});
 
   return (
     <div style={{ minHeight: "100vh" }}>
@@ -263,6 +299,88 @@ export default function SIPCalculator() {
           </div>
         </div>
 
+        <div style={{ marginTop: "3rem" }}>
+          <h2 style={{ marginBottom: "1.5rem" }}>Detailed Breakdown ({frequency === "monthly" ? "Monthly" : frequency === "quarterly" ? "Quarterly" : "Annual"} Progression)</h2>
+
+          <div style={{ overflowX: "auto" }}>
+            {Object.keys(yearlyData).map((yearStr) => {
+              const year = parseInt(yearStr);
+              const yearData = yearlyData[year];
+              const lastMonthData = yearData[yearData.length - 1];
+
+              return (
+                <div key={year} style={{ marginBottom: "1.5rem", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+                  <button
+                    onClick={() => setExpandedYear(expandedYear === year ? null : year)}
+                    style={{
+                      width: "100%",
+                      padding: "1rem",
+                      background: year === 1 ? "#eff6ff" : "#f8fafc",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      fontWeight: "600",
+                      color: "#0f172a",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f1f5f9")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = year === 1 ? "#eff6ff" : "#f8fafc")}
+                  >
+                    <span>Year {year} - Value: ₹{lastMonthData.value.toLocaleString("en-IN")} | Invested: ₹{lastMonthData.totalInvested.toLocaleString("en-IN")}</span>
+                    <span style={{ fontSize: "1.5rem", transition: "transform 0.2s", transform: expandedYear === year ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
+                  </button>
+
+                  {expandedYear === year && (
+                    <div style={{ overflowX: "auto" }}>
+                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                        <thead>
+                          <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
+                            <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "600", color: "#0f172a" }}>Period</th>
+                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Investment</th>
+                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Invested</th>
+                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Value</th>
+                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Gains</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {yearData.map((item, idx) => (
+                            <tr
+                              key={idx}
+                              style={{
+                                borderBottom: "1px solid #e2e8f0",
+                                background: idx % 2 === 0 ? "#ffffff" : "#f9fafb",
+                              }}
+                            >
+                              <td style={{ padding: "0.75rem", color: "#0f172a", fontWeight: "500" }}>
+                                Y{year}M{item.month} ({item.monthLabel})
+                              </td>
+                              <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                                ₹{item.investment.toLocaleString("en-IN")}
+                              </td>
+                              <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                                ₹{item.totalInvested.toLocaleString("en-IN")}
+                              </td>
+                              <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#2563eb" }}>
+                                ₹{item.value.toLocaleString("en-IN")}
+                              </td>
+                              <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>
+                                ₹{item.gains.toLocaleString("en-IN")}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: "0.75rem", padding: "2rem", marginTop: "2rem" }}>
           <h3>How SIP Works</h3>
           <p style={{ marginBottom: "1rem" }}>
@@ -270,22 +388,6 @@ export default function SIPCalculator() {
           </p>
           <p style={{ marginBottom: "1rem" }}>
             <strong>Step-up SIP:</strong> Increase your regular investment by a fixed percentage every year to keep pace with inflation and maximize returns over time.
-          </p>
-          <div style={{
-            background: "white",
-            border: "1px solid #e2e8f0",
-            borderRadius: "0.5rem",
-            padding: "1rem",
-            marginBottom: "1rem",
-            fontFamily: "monospace",
-            fontSize: "0.875rem",
-            color: "#0f172a",
-            overflowX: "auto",
-          }}>
-            FV = P × [((1+r)^n - 1) / r] × (1 + r)
-          </div>
-          <p style={{ fontSize: "0.875rem", color: "#64748b" }}>
-            Where FV = Future Value, P = Regular Investment, r = Periodic Return Rate, n = Number of Periods
           </p>
         </div>
 
