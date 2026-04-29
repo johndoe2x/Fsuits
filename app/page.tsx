@@ -2,52 +2,62 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen">
+      <div className="max-w-6xl mx-auto p-8">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Welcome to FSuits</h1>
-          <p className="text-lg text-slate-600">Your personal financial tools suite</p>
+          <h1 className="mb-3">Financial Calculation Tools</h1>
+          <p className="text-lg text-slate-600">
+            Professional financial calculators for informed investment decisions
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Link
             href="/rule-of-72"
-            className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white rounded-xl shadow-sm border border-slate-200/50 p-8 hover:shadow-lg hover:border-blue-300 transition-all duration-300 group"
           >
-            <div className="text-4xl mb-4">📊</div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Rule of 72</h2>
-            <p className="text-slate-600 mb-4">
-              Calculate how long it takes for your investment to double based on annual
-              return rate.
-            </p>
-            <span className="text-blue-600 font-semibold">Get Started →</span>
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="mb-2 group-hover:text-blue-600 transition-colors">
+                  Rule of 72
+                </h2>
+                <p className="text-sm">
+                  Estimate how long your investment will take to double based on
+                  annual return rate.
+                </p>
+              </div>
+              <span className="text-3xl">📈</span>
+            </div>
+
+            <div className="flex items-center gap-2 text-blue-600 font-medium text-sm">
+              <span>Open Calculator</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
           </Link>
 
-          <div className="bg-white rounded-lg shadow-lg p-8 opacity-50 cursor-not-allowed">
-            <div className="text-4xl mb-4">💰</div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Compound Interest</h2>
-            <p className="text-slate-600 mb-4">
-              Calculate compound interest on your investments over time.
-            </p>
-            <span className="text-slate-400 font-semibold">Coming Soon</span>
-          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200/50 p-8 opacity-50 cursor-not-allowed">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="mb-2 text-slate-500">Compound Interest</h2>
+                <p className="text-sm text-slate-400">
+                  Calculate compound interest on your investments over time.
+                </p>
+              </div>
+              <span className="text-3xl">💰</span>
+            </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-8 opacity-50 cursor-not-allowed">
-            <div className="text-4xl mb-4">📈</div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Investment Return</h2>
-            <p className="text-slate-600 mb-4">
-              Track and analyze your investment returns and performance.
-            </p>
-            <span className="text-slate-400 font-semibold">Coming Soon</span>
+            <div className="flex items-center gap-2 text-slate-400 font-medium text-sm">
+              <span>Coming Soon</span>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 bg-blue-50 border-l-4 border-blue-600 p-6 rounded">
-          <h3 className="text-lg font-bold text-blue-900 mb-2">About FSuits</h3>
-          <p className="text-blue-800">
-            FSuits is a collection of financial calculators and tools to help you make
-            informed investment decisions. Start with the Rule of 72 to understand how
-            your investments can grow over time.
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-8">
+          <h3 className="mb-3 text-blue-900">About FSuits</h3>
+          <p className="text-blue-800 leading-relaxed">
+            FSuits is a collection of professional financial calculators designed to help
+            you understand investment growth and make data-driven decisions. All calculators
+            use standard financial formulas and provide instant, accurate results.
           </p>
         </div>
       </div>

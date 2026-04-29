@@ -5,114 +5,130 @@ import { useState, useEffect } from "react";
 export default function RuleOf72() {
   const [rate, setRate] = useState<number>(7);
   const [years, setYears] = useState<number>(0);
-  const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
+  const [investmentAmount, setInvestmentAmount] = useState<number>(10000);
   const [finalAmount, setFinalAmount] = useState<number>(0);
 
   useEffect(() => {
     if (rate > 0) {
       const calculatedYears = 72 / rate;
       setYears(Math.round(calculatedYears * 10) / 10);
-      const result = investmentAmount * Math.pow(2, calculatedYears / calculatedYears);
-      setFinalAmount(investmentAmount * Math.pow(2, calculatedYears / calculatedYears));
+      setFinalAmount(investmentAmount * 2);
     }
   }, [rate, investmentAmount]);
 
   const handleRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value) || 0;
-    setRate(Math.max(0.1, value));
+    setRate(Math.max(0.1, Math.min(100, value)));
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInvestmentAmount(parseFloat(e.target.value) || 0);
+    const value = parseFloat(e.target.value) || 0;
+    setInvestmentAmount(Math.max(0, value));
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Rule of 72 Calculator</h1>
-          <p className="text-slate-600">
-            A simple way to estimate how long it will take for your investment to double.
+    <div className="min-h-screen">
+      <div className="max-w-4xl mx-auto p-8">
+        <div className="mb-12">
+          <h1 className="mb-3">Rule of 72 Calculator</h1>
+          <p className="text-lg text-slate-600">
+            Quickly estimate how long it takes for your investment to double
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="mb-8">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Annual Return Rate (%)
-            </label>
-            <input
-              type="number"
-              value={rate}
-              onChange={handleRateChange}
-              min="0.1"
-              step="0.1"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg"
-            />
-            <input
-              type="range"
-              value={rate}
-              onChange={handleRateChange}
-              min="0.1"
-              max="50"
-              step="0.1"
-              className="w-full mt-3"
-            />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200/50 p-8">
+              <div className="space-y-8">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-3">
+                    Annual Return Rate ({rate.toFixed(1)}%)
+                  </label>
+                  <input
+                    type="range"
+                    value={rate}
+                    onChange={handleRateChange}
+                    min="0.1"
+                    max="50"
+                    step="0.1"
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  />
+                  <div className="flex gap-2 mt-3">
+                    <input
+                      type="number"
+                      value={rate}
+                      onChange={handleRateChange}
+                      min="0.1"
+                      step="0.1"
+                      className="w-24 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 focus:bg-white focus:outline-none"
+                    />
+                    <span className="text-slate-500 py-2">%</span>
+                  </div>
+                </div>
 
-          <div className="mb-8">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Initial Investment ($)
-            </label>
-            <input
-              type="number"
-              value={investmentAmount}
-              onChange={handleAmountChange}
-              min="1"
-              step="100"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg"
-            />
-          </div>
-
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm text-slate-600 mb-1">Time to Double</p>
-                <p className="text-3xl font-bold text-blue-600">{years.toFixed(1)} years</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-600 mb-1">Final Amount (After {years.toFixed(1)} years)</p>
-                <p className="text-3xl font-bold text-green-600">
-                  ${(investmentAmount * 2).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </p>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-3">
+                    Initial Investment
+                  </label>
+                  <div className="flex gap-2">
+                    <span className="text-slate-500 py-2">$</span>
+                    <input
+                      type="number"
+                      value={investmentAmount}
+                      onChange={handleAmountChange}
+                      min="1"
+                      step="1000"
+                      className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-slate-50 p-6 rounded-lg mb-6">
-            <h3 className="font-bold text-slate-900 mb-3">How It Works</h3>
-            <p className="text-slate-700 text-sm mb-3">
-              The Rule of 72 is a simple formula to estimate the number of years required to
-              double your investment:
-            </p>
-            <div className="bg-white p-3 rounded border-l-4 border-blue-600 mb-3">
-              <p className="font-mono text-sm text-slate-800">Years to Double = 72 ÷ Annual Return Rate</p>
+          <div className="space-y-6">
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white">
+              <p className="text-sm text-blue-100 mb-1">Time to Double</p>
+              <p className="text-4xl font-bold">{years.toFixed(1)}</p>
+              <p className="text-sm text-blue-100 mt-2">years</p>
             </div>
-            <p className="text-slate-700 text-sm">
-              For example, with a 7% annual return, it would take approximately{" "}
-              <strong>10.3 years</strong> for your initial investment to double.
-            </p>
-          </div>
 
-          <div className="bg-amber-50 border-l-4 border-amber-600 p-4 rounded">
-            <p className="text-sm text-amber-800">
-              <strong>Disclaimer:</strong> This calculator is for educational purposes only. Actual
-              investment returns may vary. Consult with a financial advisor for personalized advice.
-            </p>
+            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 text-white">
+              <p className="text-sm text-green-100 mb-1">Final Amount</p>
+              <p className="text-3xl font-bold">
+                ${finalAmount.toLocaleString("en-US", {
+                  maximumFractionDigits: 0,
+                })}
+              </p>
+              <p className="text-sm text-green-100 mt-2">after {years.toFixed(1)} years</p>
+            </div>
           </div>
+        </div>
+
+        <div className="mt-8 bg-slate-50 rounded-xl border border-slate-200 p-8">
+          <h3 className="text-slate-900 mb-4 font-semibold">How It Works</h3>
+          <p className="text-slate-700 mb-4">
+            The Rule of 72 is a simple formula to estimate how many years it will take for
+            an investment to double:
+          </p>
+          <div className="bg-white border border-slate-200 rounded-lg p-4 mb-4 font-mono text-sm text-slate-900">
+            Years to Double = 72 ÷ Annual Return Rate (%)
+          </div>
+          <p className="text-slate-700 text-sm">
+            For example, at a {rate.toFixed(1)}% annual return, an investment of $
+            {investmentAmount.toLocaleString()} would double to $
+            {finalAmount.toLocaleString("en-US", { maximumFractionDigits: 0 })} in
+            approximately <strong>{years.toFixed(1)} years</strong>.
+          </p>
+        </div>
+
+        <div className="mt-8 bg-amber-50 border border-amber-200 rounded-xl p-8">
+          <p className="text-sm text-amber-900">
+            <strong>Disclaimer:</strong> This calculator is for educational purposes only.
+            Actual returns may vary based on market conditions, fees, and other factors.
+            Always consult with a qualified financial advisor before making investment
+            decisions.
+          </p>
         </div>
       </div>
     </div>

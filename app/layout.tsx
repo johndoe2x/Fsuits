@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FSuits - Financial Tools",
-  description: "Financial calculators and tools",
+  description: "Professional financial calculators and tools",
 };
 
 export default function RootLayout({
@@ -26,9 +26,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
-      <body className="min-h-full flex">
+      <body className="h-full flex">
         <Sidebar />
         <main className="flex-1 overflow-auto">{children}</main>
       </body>
