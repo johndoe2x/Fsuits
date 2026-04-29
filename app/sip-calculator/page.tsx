@@ -388,8 +388,16 @@ export default function SIPCalculator() {
                   borderBottom: "1px solid #e2e8f0",
                   fontWeight: "600",
                   color: "#0f172a",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}>
-                  Year {currentYearKey} - Value: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].value.toLocaleString("en-IN")} | Invested: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].totalInvested.toLocaleString("en-IN")}
+                  <span>Year {currentYearKey} - Value: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].value.toLocaleString("en-IN")} | Invested: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].totalInvested.toLocaleString("en-IN")}</span>
+                  {includeStepUp && stepUpPercentage > 0 && currentYearKey > 1 && (
+                    <span style={{ background: "#10b981", color: "white", padding: "0.25rem 0.75rem", borderRadius: "0.5rem", fontSize: "0.75rem", fontWeight: "700" }}>
+                      +{(stepUpPercentage * (currentYearKey - 1)).toFixed(1)}% Step-up Applied
+                    </span>
+                  )}
                 </div>
 
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
@@ -408,14 +416,19 @@ export default function SIPCalculator() {
                         key={idx}
                         style={{
                           borderBottom: "1px solid #e2e8f0",
-                          background: idx % 2 === 0 ? "#ffffff" : "#f9fafb",
+                          background: includeStepUp && stepUpPercentage > 0 && currentYearKey > 1 ? "#ecfdf5" : idx % 2 === 0 ? "#ffffff" : "#f9fafb",
                         }}
                       >
                         <td style={{ padding: "0.75rem", color: "#0f172a", fontWeight: "500" }}>
                           Y{currentYearKey}M{item.month} ({item.monthLabel})
                         </td>
-                        <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                        <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b", fontWeight: "600" }}>
                           ₹{item.investment.toLocaleString("en-IN")}
+                          {includeStepUp && stepUpPercentage > 0 && currentYearKey > 1 && idx === 0 && (
+                            <div style={{ fontSize: "0.75rem", color: "#10b981", fontWeight: "700", marginTop: "0.25rem" }}>
+                              ↑ {((item.investment / monthlyInvestment - 1) * 100).toFixed(1)}% increase
+                            </div>
+                          )}
                         </td>
                         <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
                           ₹{item.totalInvested.toLocaleString("en-IN")}
