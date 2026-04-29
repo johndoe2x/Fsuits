@@ -26,6 +26,7 @@ export default function SIPCalculator() {
   const [totalReturns, setTotalReturns] = useState<number>(0);
   const [finalAmountWithoutStepUp, setFinalAmountWithoutStepUp] = useState<number>(0);
   const [monthlyData, setMonthlyData] = useState<MonthData[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const frequencyMap: { [key: string]: number } = {
     monthly: 12,
@@ -110,6 +111,22 @@ export default function SIPCalculator() {
     acc[item.year].push(item);
     return acc;
   }, {});
+
+  const totalPages = Object.keys(yearlyData).length;
+  const yearKeys = Object.keys(yearlyData).map(Number).sort((a, b) => a - b);
+  const currentYearKey = yearKeys[currentPage - 1] || yearKeys[0];
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <div style={{ minHeight: "100vh" }}>
@@ -302,82 +319,119 @@ export default function SIPCalculator() {
         <div style={{ marginTop: "3rem" }}>
           <h2 style={{ marginBottom: "1.5rem" }}>Detailed Breakdown ({frequency === "monthly" ? "Monthly" : frequency === "quarterly" ? "Quarterly" : "Annual"} Progression)</h2>
 
-          <div style={{ overflowX: "auto" }}>
-            {Object.keys(yearlyData).map((yearStr) => {
-              const year = parseInt(yearStr);
-              const yearData = yearlyData[year];
-              const lastMonthData = yearData[yearData.length - 1];
+          {/* Pagination Controls */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", padding: "1rem", background: "#f8fafc", borderRadius: "0.75rem", border: "1px solid #e2e8f0" }}>
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              style={{
+                padding: "0.5rem 1rem",
+                background: currentPage === 1 ? "#e2e8f0" : "#2563eb",
+                color: currentPage === 1 ? "#94a3b8" : "white",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                fontWeight: "600",
+              }}
+            >
+              ← Previous
+            </button>
 
-              return (
-                <div key={year} style={{ marginBottom: "1.5rem", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <span style={{ fontWeight: "600", color: "#0f172a" }}>Page {currentPage} of {totalPages}</span>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                {yearKeys.map((year, idx) => (
                   <button
-                    onClick={() => setExpandedYear(expandedYear === year ? null : year)}
+                    key={year}
+                    onClick={() => setCurrentPage(idx + 1)}
                     style={{
-                      width: "100%",
-                      padding: "1rem",
-                      background: year === 1 ? "#eff6ff" : "#f8fafc",
-                      border: "none",
-                      textAlign: "left",
+                      padding: "0.5rem 0.75rem",
+                      background: currentPage === idx + 1 ? "#2563eb" : "#ffffff",
+                      color: currentPage === idx + 1 ? "white" : "#0f172a",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: "0.5rem",
                       cursor: "pointer",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      fontWeight: "600",
-                      color: "#0f172a",
-                      transition: "background 0.2s",
+                      fontWeight: currentPage === idx + 1 ? "600" : "500",
+                      fontSize: "0.875rem",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f1f5f9")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = year === 1 ? "#eff6ff" : "#f8fafc")}
                   >
-                    <span>Year {year} - Value: ₹{lastMonthData.value.toLocaleString("en-IN")} | Invested: ₹{lastMonthData.totalInvested.toLocaleString("en-IN")}</span>
-                    <span style={{ fontSize: "1.5rem", transition: "transform 0.2s", transform: expandedYear === year ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
+                    Y{year}
                   </button>
+                ))}
+              </div>
+            </div>
 
-                  {expandedYear === year && (
-                    <div style={{ overflowX: "auto" }}>
-                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
-                        <thead>
-                          <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
-                            <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "600", color: "#0f172a" }}>Period</th>
-                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Investment</th>
-                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Invested</th>
-                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Value</th>
-                            <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Gains</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {yearData.map((item, idx) => (
-                            <tr
-                              key={idx}
-                              style={{
-                                borderBottom: "1px solid #e2e8f0",
-                                background: idx % 2 === 0 ? "#ffffff" : "#f9fafb",
-                              }}
-                            >
-                              <td style={{ padding: "0.75rem", color: "#0f172a", fontWeight: "500" }}>
-                                Y{year}M{item.month} ({item.monthLabel})
-                              </td>
-                              <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
-                                ₹{item.investment.toLocaleString("en-IN")}
-                              </td>
-                              <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
-                                ₹{item.totalInvested.toLocaleString("en-IN")}
-                              </td>
-                              <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#2563eb" }}>
-                                ₹{item.value.toLocaleString("en-IN")}
-                              </td>
-                              <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>
-                                ₹{item.gains.toLocaleString("en-IN")}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              style={{
+                padding: "0.5rem 1rem",
+                background: currentPage === totalPages ? "#e2e8f0" : "#2563eb",
+                color: currentPage === totalPages ? "#94a3b8" : "white",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                fontWeight: "600",
+              }}
+            >
+              Next →
+            </button>
+          </div>
+
+          {/* Current Year Table */}
+          <div style={{ overflowX: "auto" }}>
+            {currentYearKey !== undefined && yearlyData[currentYearKey] && (
+              <div style={{ border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+                <div style={{
+                  padding: "1rem",
+                  background: "#eff6ff",
+                  borderBottom: "1px solid #e2e8f0",
+                  fontWeight: "600",
+                  color: "#0f172a",
+                }}>
+                  Year {currentYearKey} - Value: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].value.toLocaleString("en-IN")} | Invested: ₹{yearlyData[currentYearKey][yearlyData[currentYearKey].length - 1].totalInvested.toLocaleString("en-IN")}
                 </div>
-              );
-            })}
+
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                  <thead>
+                    <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
+                      <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "600", color: "#0f172a" }}>Period</th>
+                      <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Investment</th>
+                      <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Invested</th>
+                      <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#0f172a" }}>Total Value</th>
+                      <th style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>Gains</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {yearlyData[currentYearKey].map((item, idx) => (
+                      <tr
+                        key={idx}
+                        style={{
+                          borderBottom: "1px solid #e2e8f0",
+                          background: idx % 2 === 0 ? "#ffffff" : "#f9fafb",
+                        }}
+                      >
+                        <td style={{ padding: "0.75rem", color: "#0f172a", fontWeight: "500" }}>
+                          Y{currentYearKey}M{item.month} ({item.monthLabel})
+                        </td>
+                        <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                          ₹{item.investment.toLocaleString("en-IN")}
+                        </td>
+                        <td style={{ padding: "0.75rem", textAlign: "right", color: "#64748b" }}>
+                          ₹{item.totalInvested.toLocaleString("en-IN")}
+                        </td>
+                        <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#2563eb" }}>
+                          ₹{item.value.toLocaleString("en-IN")}
+                        </td>
+                        <td style={{ padding: "0.75rem", textAlign: "right", fontWeight: "600", color: "#16a34a" }}>
+                          ₹{item.gains.toLocaleString("en-IN")}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 
