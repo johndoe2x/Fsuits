@@ -2,62 +2,54 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-8">
-        <div className="mb-12">
-          <h1 className="mb-3">Financial Calculation Tools</h1>
-          <p className="text-lg text-slate-600">
+    <div style={{ minHeight: "100vh" }}>
+      <div className="container">
+        <div style={{ marginBottom: "3rem" }}>
+          <h1>Financial Calculation Tools</h1>
+          <p style={{ fontSize: "1.125rem" }}>
             Professional financial calculators for informed investment decisions
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Link
-            href="/rule-of-72"
-            className="bg-white rounded-xl shadow-sm border border-slate-200/50 p-8 hover:shadow-lg hover:border-blue-300 transition-all duration-300 group"
-          >
-            <div className="flex items-start justify-between mb-6">
+        <div className="grid grid-cols-2">
+          <Link href="/Fsuits/rule-of-72" className="card" style={{ display: "block", position: "relative" }}>
+            <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
               <div>
-                <h2 className="mb-2 group-hover:text-blue-600 transition-colors">
-                  Rule of 72
-                </h2>
-                <p className="text-sm">
-                  Estimate how long your investment will take to double based on
-                  annual return rate.
+                <h2 style={{ marginBottom: "0.5rem" }}>Rule of 72</h2>
+                <p style={{ fontSize: "0.875rem" }}>
+                  Estimate how long your investment will take to double based on annual return rate.
                 </p>
               </div>
-              <span className="text-3xl">📈</span>
+              <span style={{ fontSize: "1.875rem" }}>📈</span>
             </div>
-
-            <div className="flex items-center gap-2 text-blue-600 font-medium text-sm">
+            <div className="flex items-center gap-3" style={{ color: "#2563eb", fontWeight: "500", fontSize: "0.875rem" }}>
               <span>Open Calculator</span>
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
+              <span>→</span>
             </div>
           </Link>
 
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200/50 p-8 opacity-50 cursor-not-allowed">
-            <div className="flex items-start justify-between mb-6">
+          <div className="card" style={{ opacity: 0.5, cursor: "not-allowed" }}>
+            <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
               <div>
-                <h2 className="mb-2 text-slate-500">Compound Interest</h2>
-                <p className="text-sm text-slate-400">
+                <h2 style={{ marginBottom: "0.5rem", color: "#cbd5e1" }}>Compound Interest</h2>
+                <p style={{ fontSize: "0.875rem", color: "#a1a5af" }}>
                   Calculate compound interest on your investments over time.
                 </p>
               </div>
-              <span className="text-3xl">💰</span>
+              <span style={{ fontSize: "1.875rem" }}>💰</span>
             </div>
-
-            <div className="flex items-center gap-2 text-slate-400 font-medium text-sm">
+            <div className="flex items-center gap-3" style={{ color: "#cbd5e1", fontWeight: "500", fontSize: "0.875rem" }}>
               <span>Coming Soon</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-8">
-          <h3 className="mb-3 text-blue-900">About FSuits</h3>
-          <p className="text-blue-800 leading-relaxed">
-            FSuits is a collection of professional financial calculators designed to help
-            you understand investment growth and make data-driven decisions. All calculators
-            use standard financial formulas and provide instant, accurate results.
+        <div className="highlight">
+          <h3>About FSuits</h3>
+          <p>
+            FSuits is a collection of professional financial calculators designed to help you
+            understand investment growth and make data-driven decisions. All calculators use
+            standard financial formulas and provide instant, accurate results.
           </p>
         </div>
       </div>
