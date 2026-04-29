@@ -87,7 +87,7 @@ export default function SIPCalculator() {
       // Calculate with step-up
       let fvWithStepUp = 0;
       if (includeStepUp && stepUpPercentage > 0) {
-        fvWithStepUp = Math.round(totalVal);
+        fvWithStepUp = Math.round(portfolioValue);
       } else {
         fvWithStepUp = Math.round(fvWithoutStepUp);
       }
