@@ -7,6 +7,7 @@ const menuItems = [
   { href: "/", label: "Dashboard", icon: "📊" },
   { href: "/rule-of-72", label: "Rule of 72", icon: "📈" },
   { href: "/compound-interest", label: "Compound Interest", icon: "💰" },
+  { href: "/sip-calculator", label: "SIP Calculator", icon: "📲" },
 ];
 
 export default function Sidebar() {

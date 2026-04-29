@@ -45,6 +45,22 @@ export default function Home() {
           </Link>
         </div>
 
+        <Link href="/sip-calculator" className="card" style={{ display: "block", position: "relative" }}>
+            <div className="flex items-start justify-between" style={{ marginBottom: "1.5rem" }}>
+              <div>
+                <h2 style={{ marginBottom: "0.5rem" }}>SIP Calculator</h2>
+                <p style={{ fontSize: "0.875rem" }}>
+                  Calculate Systematic Investment Plan returns with step-up feature.
+                </p>
+              </div>
+              <span style={{ fontSize: "1.875rem" }}>📲</span>
+            </div>
+            <div className="flex items-center gap-3" style={{ color: "#2563eb", fontWeight: "500", fontSize: "0.875rem" }}>
+              <span>Open Calculator</span>
+              <span>→</span>
+            </div>
+          </Link>
+
         <div className="highlight">
           <h3>About FSuits</h3>
           <p>
