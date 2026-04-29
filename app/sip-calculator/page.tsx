@@ -53,7 +53,7 @@ export default function SIPCalculator() {
       // Build detailed breakdown
       const data: MonthData[] = [];
       let totalInv = 0;
-      let totalVal = 0;
+      let portfolioValue = 0;
       const stepUpRate = includeStepUp && stepUpPercentage > 0 ? stepUpPercentage / 100 : 0;
 
       for (let i = 0; i < periodsTotal; i++) {
@@ -61,8 +61,9 @@ export default function SIPCalculator() {
         const monthInYear = (i % periodPerYear) + 1;
         const currentInvestment = monthlyInvestment * Math.pow(1 + stepUpRate, year - 1);
 
+        // Grow existing portfolio by one period
+        portfolioValue = portfolioValue * (1 + periodRate) + currentInvestment;
         totalInv += currentInvestment;
-        totalVal += currentInvestment * Math.pow(1 + periodRate, periodsTotal - i - 1);
 
         const monthLabels = frequency === "monthly"
           ? [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`]
@@ -76,8 +77,8 @@ export default function SIPCalculator() {
           monthLabel: monthLabels[monthInYear - 1],
           investment: Math.round(currentInvestment),
           totalInvested: Math.round(totalInv),
-          value: Math.round(totalVal),
-          gains: Math.round(totalVal - totalInv),
+          value: Math.round(portfolioValue),
+          gains: Math.round(portfolioValue - totalInv),
         });
       }
 
